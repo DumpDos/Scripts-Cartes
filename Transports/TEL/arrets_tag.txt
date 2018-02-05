@@ -1,0 +1,95 @@
+A = {
+"0001": 'Denis Papin',
+"0002": 'Auguste Delaune',
+"0003": 'Marie Curie',
+"0004": 'La Rampe - Centre-Ville',
+"0006": 'Essarts - La Butte',
+"0007": 'Surieux',
+"0008": 'Les Granges',
+"0009": 'Polesud - Alpexpo',
+"0010": 'Grand'Place',
+"0011": 'Arlequin',
+"0012": 'La Bruyère',
+"0013": 'MC2 : Maison de la Culture'
+"0014": 'Mounier'
+"0015": 'Albert 1er de Belgique'
+"0016": 'Chavant'
+"0017": 'Verdun - Préfecture',
+"0018": 'Hubert Dubedout',
+###"9999": 'Victor Hugo',
+"0021": 'Alsace - Lorraine',
+"0022": 'Gares',
+"0023": 'Saint-Bruno',
+"0024": 'Berriat-Le Magasin',
+"0025": 'Les Fontainades - Le Vog',
+"0026": 'Louis Maisonnat',
+"0027": 'Fontaine Hôtel de Ville',
+"0028": 'Charles Michels',
+"0029": 'La Poya',
+"0041": 'Echirolles Gare',
+}
+
+B = {
+###"9999": 'Presqu'île'
+###"9999": 'CEA - Cambridge'
+###"9999": 'Cité Internationale'
+###"9999": 'Palais de Justice'
+"0030": 'Sainte-Claire - Les Halles'
+"0031": 'Notre-Dame - Musée'
+"0032": 'Ile Verte'
+"0033": 'La Tronche Hôpital'
+"0034": 'Michallon'
+"0035": 'Grand Sablon'
+"0036": 'Les Taillées - Universités'
+"0037": 'Gabriel Fauré'
+"0038": 'Bibliothèques Universitaires'
+"0042": 'Condillac - Universités'
+"0043": 'Mayencin - Champ Roman'
+"0044": 'Gières Gare - Universités'
+"0045": 'Plaine des Sports'
+}
+
+C = {
+###"9999": 'Hector Berlioz - Universités' ?????
+"0051": 'Neyrpic - Belledonne'
+"0052": 'Péri - Brossolette'
+"0053": 'Flandrin - Valmy'
+"0054": 'Grenoble Hôtel de Ville'
+"0055": 'Gustave Rivet'
+"0056": 'Foch - Ferrié'
+"0057": 'Vallier - Libération'
+"0058": 'Vallier - Docteur Calmette'
+"0059": 'Vallier - Catane'
+"0060": 'Seyssinet-Pariset Hôtel de Ville'
+"0061": 'Fauconnière'
+"0062": 'Grand Pré'
+"0063": 'Mas des Iles'
+"0064": 'Le Prisme'
+}
+
+D = {
+"0065": 'Maison Communale'
+"0066": 'Edouard Vaillant'
+"0067": 'Parc Jo Blanchon'
+"0068": 'Etienne Grappe'
+}
+
+E = {
+###"9999": 'Louise Michel'
+###"9999": 'Alliés'
+###"9999": 'Vallier - Libération'
+###"9999": 'Condorcet'
+###"9999": 'Alsace-Lorraine'
+###"9999": 'Esplanade Centre'
+###"9999": 'Casamaures - Village'
+###"9999": 'Hôtel de Ville'
+###"9999": 'Horloge'
+###"9999": 'Néron'
+###"9999": 'Fiancey - Prédieu'
+###"9999": 'Muret'
+###"9999": 'Pont de Vence'
+###"9999": 'La Pinéa - St Robert'
+###"9999": 'Karben'
+###"9999": 'Rafour'
+###"9999": 'Palluel'
+}
