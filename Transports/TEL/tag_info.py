@@ -1,5 +1,6 @@
 #!/usr/bin/env python 
 # coding: utf-8
+# Créé par DumpDos, 2017
 
 #--- librairies ---#
 import os
