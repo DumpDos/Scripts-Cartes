@@ -239,5 +239,5 @@ while True:
    #--- sortie script ---#
    except KeyboardInterrupt:
       os.system('setxkbmap fr')
-      print''
+      os.system('clear')
       sys.exit(0)
