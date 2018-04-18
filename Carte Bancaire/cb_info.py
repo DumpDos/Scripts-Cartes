@@ -243,7 +243,7 @@ while True:
          print '\033[37m****************************************************************************'
 
          #--- récupération des données ---
-         cb_info_base.write("\nTicket enregistré le %s/%s/%s à %s:%s" % (date.day, date.month, date.year, date.hour, date.minute))
+         cb_info_base.write("\nCarte enregistrée le %s/%s/%s à %s:%s" % (date.day, date.month, date.year, date.hour, date.minute))
          cb_info_base.write("\n****************************************************************************")
          cb_info_base.write("\nErreur")
          cb_info_base.write("\n****************************************************************************")
