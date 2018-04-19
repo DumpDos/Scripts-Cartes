@@ -76,6 +76,8 @@ def exp_define(yea_str, mon_str):
    
    return (mon_for, yea_for)
    
+#--- fonction service ---#
+   
 def srv_define(srv_str):
    srv_0_list = ["null",
                  "Echanges internationaux possibles",
@@ -113,6 +115,39 @@ def srv_define(srv_str):
    
    return (srv_0, srv_1, srv_2)
 
+def val_define(pan_str):
+    rank = 0
+    pan_add_peer = 0
+    pan_add_odde = 0
+	
+    pan_list = list(pan_str)
+    while not rank > 15:
+       if rank%2 == 0:
+          
+	  pan_add_var = int(pan_list[rank]) * 2
+          res_lon = len(str(pan_add_var))
+
+          if res_lon == 2:
+             pan_add_conv = list(str(pan_add_var))
+             pan_add_peer = (int(pan_add_conv[0]) + int(pan_add_conv[1]) + pan_add_peer)
+
+          else:
+             pan_add_peer = pan_add_var + pan_add_peer
+          rank = rank + 1
+		   
+       else:
+          pan_add_odde = (int(pan_list[rank]) + pan_add_odde)
+	  rank = rank + 1
+		   
+    pan_val = pan_add_peer + pan_add_odde
+    pan_val_list = list(str(pan_val))
+
+    if pan_val_list[1] == "0":
+       return ("Valide", pan_val)
+
+    else:
+       return ("Non-valide", pan_val)
+    
 
 #--- Script ---#
 
@@ -154,14 +189,8 @@ while True:
       cb2_list = list(cb2_raw)
 	  
       cb1_con = cb1_list [1]
-      cb1_pan = (cb1_list [02] + 
-		 cb1_list [03] + 
-		 cb1_list [04] + 
-		 cb1_list [05] + 
-		 cb1_list [06] + 
-		 cb1_list [07] + 
-		 cb1_list [08] + 
-		 cb1_list [09] + 
+      cb1_pan = (cb1_list [02] +  cb1_list [03] + cb1_list [04] + cb1_list [05] + cb1_list [06] + cb1_list [07] + cb1_list [8] + 
+		 cb1_list [9] + 
 		 cb1_list [10] + 
 		 cb1_list [11] + 
 		 cb1_list [12] + 
@@ -171,12 +200,13 @@ while True:
 		 cb1_list [16] + 
 		 cb1_list [17]
 		)
+
       cb1_tit = (cb1_list [19] + 
 		 cb1_list [20] + 
 		 cb1_list [21] + 
 		 cb1_list [22] + 
 	   	 cb1_list [23] + 
-	         cb1_list [24] + 
+	     cb1_list [24] + 
 		 cb1_list [25] + 
 		 cb1_list [26] + 
 		 cb1_list [27] + 
@@ -198,6 +228,7 @@ while True:
                  cb1_list [43] +
                  cb1_list [44]
 		 )
+
       cb1_yea = cb1_list [46] + cb1_list [47]
       cb1_mon = cb1_list [48] + cb1_list [49]
       cb1_srv = cb1_list [50] + cb1_list [51] + cb1_list [52]
@@ -206,18 +237,20 @@ while True:
 
          #--- Conversion des infos ---#
          (pan_for)          = pan_define(cb1_pan)
+         (val_for, val_pan) = val_define(cb1_pan)
          (tit_for, tit_civ) = tit_define(cb1_tit)
          (mon_for, yea_for) = exp_define(cb1_yea, cb1_mon)
          (ech_for, aut_for, ret_for) = srv_define(cb1_srv)
 
          #--- affichage infos  ---#
          print '\033[37m****************************************************************************'
-         print ("\033[33mPAN                      : %s" % (pan_for))
-         print ("Titulaire                : %s %s" % (tit_civ, tit_for))
-         print ("Expiration               : %s %s" % (mon_for, yea_for))
-         print ("Conditons échanges       : %s" % (ech_for))
-         print ("Autorisation de paiement : %s" % (aut_for))
-         print ("Autorisation de retrait  : %s" % (ret_for))
+         print ("\033[33mPAN                         : %s" % (pan_for))
+         print ("Titulaire                   : %s %s" % (tit_civ, tit_for))
+         print ("Expiration                  : %s %s" % (mon_for, yea_for))
+         print ("Conditons échanges          : %s" % (ech_for))
+         print ("Autorisation de paiement    : %s" % (aut_for))
+         print ("Autorisation de retrait     : %s" % (ret_for))
+         print ("Validité du numéro de carte : %s, Valeur: %s" % (val_for, val_pan))
          print '\033[37m****************************************************************************'
    
          #--- récupération des données ---#
