@@ -76,7 +76,7 @@ def exp_define(yea_str, mon_str):
    
    return (mon_for, yea_for)
    
-#--- fonction service ---#
+#--- Fonction service ---#
    
 def srv_define(srv_str):
    srv_0_list = ["null",
@@ -114,6 +114,8 @@ def srv_define(srv_str):
    srv_2 = srv_2_list[int(srv_list[2])]
    
    return (srv_0, srv_1, srv_2)
+
+#---Fonction validation PAN---#
 
 def val_define(pan_str):
     rank = 0
@@ -189,7 +191,13 @@ while True:
       cb2_list = list(cb2_raw)
 	  
       cb1_con = cb1_list [1]
-      cb1_pan = (cb1_list [02] +  cb1_list [03] + cb1_list [04] + cb1_list [05] + cb1_list [06] + cb1_list [07] + cb1_list [8] + 
+      cb1_pan = (cb1_list [2] +  
+		 cb1_list [3] + 
+		 cb1_list [4] + 
+		 cb1_list [5] + 
+		 cb1_list [6] + 
+		 cb1_list [7] + 
+		 cb1_list [8] + 
 		 cb1_list [9] + 
 		 cb1_list [10] + 
 		 cb1_list [11] + 
@@ -198,7 +206,7 @@ while True:
 		 cb1_list [14] + 
 		 cb1_list [15] + 
 		 cb1_list [16] + 
-		 cb1_list [17]
+	   	 cb1_list [17]
 		)
 
       cb1_tit = (cb1_list [19] + 
@@ -206,7 +214,7 @@ while True:
 		 cb1_list [21] + 
 		 cb1_list [22] + 
 	   	 cb1_list [23] + 
-	     cb1_list [24] + 
+	   	 cb1_list [24] + 
 		 cb1_list [25] + 
 		 cb1_list [26] + 
 		 cb1_list [27] + 
@@ -254,8 +262,7 @@ while True:
          print '\033[37m****************************************************************************'
    
          #--- récupération des données ---#
-   
-      
+
          cb_info_base.write("\nCarte enregistrée le %s/%s/%s à %s:%s" % (date.day, date.month, date.year, date.hour, date.minute))
          cb_info_base.write("\n****************************************************************************")
          cb_info_base.write("\nPAN        : %s" % (pan_for))
