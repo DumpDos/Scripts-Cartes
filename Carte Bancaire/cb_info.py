@@ -8,292 +8,122 @@ import sys
 import time
 import datetime
 
-#--- fonction mise en forme du pan ---#
+#--- Variables ---#
+file_vigik = "keys/vigik.txt"
+file_mifar = "keys/mifare.txt"
 
-def pan_define(pan_str):
-   
-   pan_list = list(pan_str)
-   nul_char = " " 
-   
-   pan_for = (pan_list[0] +
-              pan_list[1] +
-              pan_list[2] +
-              pan_list[3] +
-              nul_char +
-              pan_list[4] +
-              pan_list[5] +
-              pan_list[6] +
-              pan_list[7] +
-              nul_char +
-              pan_list[8] +
-              pan_list[9] +
-              pan_list[10] +
-              pan_list[11] +
-              nul_char +
-              pan_list[12] +
-              pan_list[13] +
-              pan_list[14] +
-              pan_list[15]
-             )
+#--- fonction logo ---#
 
-   return pan_for
-   
-#--- fonction exatraction nom titulaire ---#
+def aff_logo():
+	os.system('clear')
+	print"\033[34m****************************************************************************"
+	print"\033[33m  __  __ _  __                 ______                     _                 "
+	print" |  \/  (_)/ _|               |  ____|                   | |                "
+	print" | \  / |_| |_ __ _ _ __ ___  | |__   _ __   ___ ___   __| | ___ _   _ _ __ "
+	print" | |\/| | |  _/ _` | '__/ _ \ |  __| | '_ \ / __/ _ \ / _` |/ _ \ | | | '__|"
+	print" | |  | | | || (_| | | |  __/ | |____| | | | (_| (_) | (_| |  __/ |_| | |   "
+	print" |_|  |_|_|_| \__,_|_|  \___| |______|_| |_|\___\___/ \__,_|\___|\__,_|_|   "
+	print" "
+	print"\033[34m****************************************************************************"
+	print"\033[33mBeta V0.1, DumpDos 2018, Ctrl+C Pour quitter"
+	print""
 
-def tit_define(tit_str):
+#--- fonction vérification device ---#
+def nfc_devi():
 
-   tit_for_var = tit_str.replace('/',' ')
-   tit_civ_var = re.search(r"\.([A-Z]+)", tit_for_var)
-   result = tit_civ_var.group()
+	raw_devi = os.popen("nfc-list").read()
+	int_device_emp = raw_devi.find('found')
+	int_device_ful = raw_devi.find('UID')
 
-   tit_for = tit_for_var.replace(result,'')
-   tit_civ = result.replace('.','')
+	if int_device_emp == -1 or int_device_ful == -1:
+		str_devi = raw_devi[39:-1]
+		print ("\033[32mLecteur NFC détecté : %s " % (str_devi))
+		print""
+		
+	else:
+		print ("\033[31mAucun lecteur détecté")
+		print""
 
-   return (tit_for, tit_civ)
+#--- fonction lecture badge ---#
 
-#--- fonction calcul expiration ---#
+def read_devi(type, keys_file, action, file_name):
 
-def exp_define(yea_str, mon_str):
-
-   yea_int = int(yea_str)
-   mon_int = int(mon_str)
-   mon_list = ["Janvier",
-               "Février",
-               "Mars",
-               "Avril",
-               "Mai",
-               "Juin",
-               "Juillet",
-               "Août",
-               "Septembre",
-               "Octobre",
-	       "Novembre",
-               "Décembre",
-              ]
-
-   mon_for = mon_list [mon_int-1]
-   yea_for = yea_int + 2000
-   
-   return (mon_for, yea_for)
-   
-#--- Fonction service ---#
-   
-def srv_define(srv_str):
-   srv_0_list = ["null",
-                 "Echanges internationaux possibles",
-                 "Echanges internationaux possibles avec utilisation de la puce",
-		 "null",
-		 "null",
-                 "Echanges nationaux seulement",
-                 "Echanges nationaux seulement avec utilisation de la puce",
-                 "Echanges uniquement sur accords",
-                 "null",
-                 "null",
-                 "Carte test",
-                ]
-   srv_1_list = ["Autorisation de paiement sans restriction",
-                 "null",
-		 "Autorisation de paiement délivrée par la banque",
-		 "null",
-                 "Autorisation de paiment délivrée par la banque, sauf accord terminal",
-                ]
-   srv_2_list = ["Pas de restrictions de retrait, code requis",
-                 "Pas de restrictions de retrait",
-		 "Retrait interdit, sauf biens et services",
-		 "Retrait uniquement, code requis",
-		 "Retrait possible, solde créditeur requis",
-		 "Retrait interdit, sauf biens et services, code requis",
-		 "Pas de restrictions de retrait, code requis si possible",
-		 "Retrait interdit, sauf biens et services, code requis si possible",
-                ]
+	date = datetime.datetime.now()
+	file_name_time = date.strftime("./dumps/%Y%m%d_%H%M%S.dmp")
 	
-   srv_list = list(srv_str)
+	if type == 'm':
+		keys_file_type = file_mifar
 
-   srv_0 = srv_0_list[int(srv_list[0])]
-   srv_1 = srv_1_list[int(srv_list[1])]
-   srv_2 = srv_2_list[int(srv_list[2])]
-   
-   return (srv_0, srv_1, srv_2)
+	elif type == 'v':
+		keys_file_type = file_vigik
 
-#---Fonction validation PAN---#
+	elif type == 'f':
+		keys_file_type = keys_file
 
-def val_define(pan_str):
-    rank = 0
-    pan_add_peer = 0
-    pan_add_odde = 0
+	if file_name == '':
+
+		os.system('mfoc -P 500 -f %s -O %s' % (keys_file_type, file_name_time))
+		aff_logo()
 	
-    pan_list = list(pan_str)
-    while not rank > 15:
-       if rank%2 == 0:
-          
-	  pan_add_var = int(pan_list[rank]) * 2
-          res_lon = len(str(pan_add_var))
-
-          if res_lon == 2:
-             pan_add_conv = list(str(pan_add_var))
-             pan_add_peer = (int(pan_add_conv[0]) + int(pan_add_conv[1]) + pan_add_peer)
-
-          else:
-             pan_add_peer = pan_add_var + pan_add_peer
-          rank = rank + 1
-		   
-       else:
-          pan_add_odde = (int(pan_list[rank]) + pan_add_odde)
-	  rank = rank + 1
-		   
-    pan_val = pan_add_peer + pan_add_odde
-    pan_val_list = list(str(pan_val))
-
-    if pan_val_list[1] == "0":
-       return ("Valide", pan_val)
-
-    else:
-       return ("Non-valide", pan_val)
-    
+	else:
+		aff_logo()
+		print""
+		print"\033[36mCopie du Badge en cours..."
+		os.system('mfoc -P 500 -f %s -O %s' % (keys_file_type, file_name))
+	
+	return (file_name)
 
 #--- Script ---#
 
 #--- Efface écran ---#
 os.system('clear')
 
-#--- Passage clavier qwerty ---#
-os.system('setxkbmap us')
- 
-#--- affichage ---#
-print '\033[34m***************************************************************'
-print '*************************\033[31m CB INFO \033[34m*****************************' 
-print '*******************\033[33m CTRL+C pour quitter \033[34m***********************'
-print '***************************************************************'   
+#--- Initialisation ---#
 
-#--- boucle ---# 
-while True:
+aff_logo()
+nfc_devi()
 
-   #--- entrée exception ---#
-   try:
-   
-      #--- variables ---#   
-      date = datetime.datetime.now()
-      file_1 = date.strftime("./enregistrements/%Y%m%d_%H%M%S.txt")
-      file_2 = "./enregistrements/cb_info_base.txt"
-      
-      #--- initialisation ---#
-      cb_info_regi = open(file_1, "w")
-      cb_info_base = open(file_2, "a")
+#--- Récupération des données ---#
 
-      #--- Entrée numéro ticket ---#
-      print '\033[37mPassez une carte bancaire dans le lecteur'
-      cb1_raw = raw_input("\033[31mCB1:")
-      cb2_raw = raw_input("CB2:")
-	  
+try:
 
-      #--- récupération des infos ---#
-      cb1_list = list(cb1_raw)
-      cb2_list = list(cb2_raw)
-	  
-      cb1_con = cb1_list [1]
-      cb1_pan = (cb1_list [2] +  
-		 cb1_list [3] + 
-		 cb1_list [4] + 
-		 cb1_list [5] + 
-		 cb1_list [6] + 
-		 cb1_list [7] + 
-		 cb1_list [8] + 
-		 cb1_list [9] + 
-		 cb1_list [10] + 
-		 cb1_list [11] + 
-		 cb1_list [12] + 
-		 cb1_list [13] + 
-		 cb1_list [14] + 
-		 cb1_list [15] + 
-		 cb1_list [16] + 
-	   	 cb1_list [17]
-		)
+	print"\033[36m#===[Type de badge]===#:"
+	print"\033[37m"
+	print"Mifare Classic  : m"
+	print"Vigik           : v"
+	print"Fichier de clés : f"
+	print""
+	type_raw = raw_input("\033[33mType : ")
+	
+	aff_logo()
+		
+	if type_raw == 'f':
+		print""
+		keys_raw = raw_input("\033[33mEmplacement du fichier de clés : ")
+		
+	else:
+		keys_raw = 'none'
 
-      cb1_tit = (cb1_list [19] + 
-		 cb1_list [20] + 
-		 cb1_list [21] + 
-		 cb1_list [22] + 
-	   	 cb1_list [23] + 
-	   	 cb1_list [24] + 
-		 cb1_list [25] + 
-		 cb1_list [26] + 
-		 cb1_list [27] + 
-		 cb1_list [28] + 
-		 cb1_list [29] +
-                 cb1_list [30] +
-                 cb1_list [31] +
-                 cb1_list [32] +
-                 cb1_list [33] +
-                 cb1_list [34] +
-                 cb1_list [35] +
-                 cb1_list [36] +
-                 cb1_list [37] +
-                 cb1_list [38] +
-                 cb1_list [39] +
-                 cb1_list [40] +
-                 cb1_list [41] +
-                 cb1_list [42] +
-                 cb1_list [43] +
-                 cb1_list [44]
-		 )
+	
+	print"\033[36m#====[Actions]====#:"
+	print"\033[37m"
+	print"Lecture du badge : r"
+	print"Copie du badge   : w"
+	print"Copies multiples : m"
+	print"Creation         : c"
+	print""
+	actn_raw = raw_input("\033[33mType : ")
 
-      cb1_yea = cb1_list [46] + cb1_list [47]
-      cb1_mon = cb1_list [48] + cb1_list [49]
-      cb1_srv = cb1_list [50] + cb1_list [51] + cb1_list [52]
+	if actn_raw == 'r':
+		print""
+		file_nam = raw_input("\033[33mNom du dump : ")
+		read_devi(type_raw, keys_raw, actn_raw, file_nam)
 
-      if cb1_con == "B":  
+	elif actn_raw == 'c':
+		print""
+		file_raw = raw_input("\033[33mEmplacement du fichier .dmp : ")
 
-         #--- Conversion des infos ---#
-         (pan_for)          = pan_define(cb1_pan)
-         (val_for, val_pan) = val_define(cb1_pan)
-         (tit_for, tit_civ) = tit_define(cb1_tit)
-         (mon_for, yea_for) = exp_define(cb1_yea, cb1_mon)
-         (ech_for, aut_for, ret_for) = srv_define(cb1_srv)
-
-         #--- affichage infos  ---#
-         print '\033[37m****************************************************************************'
-         print ("\033[33mPAN                         : %s" % (pan_for))
-         print ("Titulaire                   : %s %s" % (tit_civ, tit_for))
-         print ("Expiration                  : %s %s" % (mon_for, yea_for))
-         print ("Conditons échanges          : %s" % (ech_for))
-         print ("Autorisation de paiement    : %s" % (aut_for))
-         print ("Autorisation de retrait     : %s" % (ret_for))
-         print ("Validité du numéro de carte : %s, Valeur: %s" % (val_for, val_pan))
-         print '\033[37m****************************************************************************'
-   
-         #--- récupération des données ---#
-
-         cb_info_base.write("\nCarte enregistrée le %s/%s/%s à %s:%s" % (date.day, date.month, date.year, date.hour, date.minute))
-         cb_info_base.write("\n****************************************************************************")
-         cb_info_base.write("\nPAN        : %s" % (pan_for))
-         cb_info_base.write("\nTitulaire  : %s %s" % (tit_civ, tit_for))
-         cb_info_base.write("\nExpiration : %s %s" % (mon_for, yea_for))
-         cb_info_base.write("\n****************************************************************************")
-         
-         cb_info_regi.write("\n%s" % (cb1_raw))
-         cb_info_regi.write("\n%s" % (cb2_raw))
-         cb_info_regi.write("\n+?")
-
-      #--- Erreur ---#
-      else:
-
-         #--- affichage infos  ---#  
-         print '****************************************************************************'
-         print '\033[31mErreur'
-         print '\033[37m****************************************************************************'
-
-         #--- récupération des données ---
-         cb_info_base.write("\nCarte enregistrée le %s/%s/%s à %s:%s" % (date.day, date.month, date.year, date.hour, date.minute))
-         cb_info_base.write("\n****************************************************************************")
-         cb_info_base.write("\nErreur")
-         cb_info_base.write("\n****************************************************************************")
-		 
-      cb_info_base.close()
-      cb_info_regi.close()
-
-   #--- sortie script ---#
-   except KeyboardInterrupt:
-      os.system('setxkbmap fr')
-      print''
-      os.system('clear')
-      sys.exit(0)
+except KeyboardInterrupt:
+	print''
+	os.system('clear')
+	sys.exit(0)
